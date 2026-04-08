@@ -1,383 +1,170 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#000000" />
-  <meta name="description" content="Vibe Bag Shop - 프리미엄 가방 쇼핑몰" />
-  <title>Vibe Bag Shop</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-        sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      background-color: #fafafa;
-    }
-    * {
-      box-sizing: border-box;
-    }
-    html {
-      scroll-behavior: smooth;
-    }
-    .line-clamp-2 {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    canvas {
-      display: block;
-      width: 100% !important;
-      height: 100% !important;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIBE Bag Shop - 프리미엄 가방 셀렉트샵</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GLTFLoader & OrbitControls CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div id="root"></div>
+<body class="text-gray-900 overflow-x-hidden">
 
-  <script type="text/babel">
-    const { useState, useEffect, useRef } = React;
+    <!-- 1. Navigation Menu -->
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="text-2xl font-black font-montserrat tracking-tighter">VIBE</div>
+            <div class="hidden md:flex space-x-12 text-sm font-bold uppercase tracking-widest">
+                <a href="#" class="hover:text-blue-600 transition-colors">NEW ARRIVALS</a>
+                <a href="#" class="hover:text-blue-600 transition-colors">BESTSELLERS</a>
+                <a href="#" class="hover:text-blue-600 transition-colors">COLLECTIONS</a>
+                <a href="#" class="hover:text-blue-600 transition-colors">ABOUT</a>
+            </div>
+            <div class="flex items-center space-x-6">
+                <button class="hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </button>
+                <button class="relative hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                    <span class="absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">2</span>
+                </button>
+            </div>
+        </div>
+    </nav>
 
-    // Navigation Component
-    const Navigation = () => {
-      const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-      return (
-        <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex-shrink-0">
-                <h1 className="text-2xl font-bold text-gray-900">VIBE</h1>
-              </div>
-              <div className="hidden md:block">
-                <div className="ml-10 flex items-baseline space-x-8">
-                  <a href="#home" className="text-gray-900 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">홈</a>
-                  <a href="#featured" className="text-gray-500 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">MD추천</a>
-                  <a href="#popular" className="text-gray-500 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">인기상품</a>
-                  <a href="#new" className="text-gray-500 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">신상품</a>
-                  <a href="#sale" className="text-gray-500 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">세일</a>
+    <main class="pt-20">
+        <!-- 2. MD 추천 상품 (3D Showcase) -->
+        <section id="featured" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-blue-600 font-bold tracking-widest text-sm mb-2 uppercase">MD'S CHOICE</h3>
+                    <h2 class="text-4xl md:text-5xl font-black tracking-tight mb-4">SIGNATURE BRIEFCASE</h2>
+                    <p class="text-gray-500 max-w-2xl mx-auto">프리미엄 천연 가죽과 정교한 수작업으로 완성된 VIBE의 시그니처 아이템입니다. 마우스로 드래그하여 가방의 디테일을 확인해보세요.</p>
                 </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <button className="p-2 text-gray-500 hover:text-blue-600 transition-colors">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-                <button className="p-2 text-gray-500 hover:text-blue-600 transition-colors relative">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                  <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">0</span>
-                </button>
-                <div className="md:hidden">
-                  <button
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="p-2 text-gray-500 hover:text-blue-600 transition-colors"
-                  >
-                    {isMenuOpen ? (
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    ) : (
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                      </svg>
-                    )}
-                  </button>
+
+                <div class="grid lg:grid-cols-3 gap-12 items-center">
+                    <!-- Left: Details -->
+                    <div class="space-y-8 order-2 lg:order-1">
+                        <div>
+                            <h4 class="font-bold text-lg mb-2 border-l-4 border-blue-600 pl-4">Premium Leather</h4>
+                            <p class="text-sm text-gray-500 leading-relaxed">이탈리아산 최상급 소가죽만을 선별하여 시간이 흐를수록 깊어지는 풍미를 느낄 수 있습니다.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-2 border-l-4 border-blue-600 pl-4">Functional Design</h4>
+                            <p class="text-sm text-gray-500 leading-relaxed">16인치 맥북 수납이 가능하며, 다양한 스마트 기기 포켓이 구성되어 있습니다.</p>
+                        </div>
+                    </div>
+
+                    <!-- Center: 3D Canvas -->
+                    <div class="relative group order-1 lg:order-2 lg:col-span-1">
+                        <div id="three-canvas-container" class="bg-gradient-to-b from-gray-50 to-white rounded-3xl overflow-hidden shadow-2xl transition-all duration-700 group-hover:shadow-blue-100"></div>
+                        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-md px-6 py-2 rounded-full shadow-sm text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+                            DRAG TO ROTATE
+                        </div>
+                    </div>
+
+                    <!-- Right: Color & Action -->
+                    <div class="space-y-10 order-3">
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-sm tracking-widest uppercase text-gray-400">SELECT COLOR</h4>
+                            <div class="flex space-x-4" id="color-options">
+                                <button data-color="#1A1A1A" class="w-10 h-10 rounded-full bg-[#1A1A1A] border-2 border-white ring-2 ring-blue-600 transition-all scale-110 shadow-lg"></button>
+                                <button data-color="#5D4037" class="w-10 h-10 rounded-full bg-[#5D4037] border-2 border-white hover:ring-2 hover:ring-gray-300 transition-all"></button>
+                                <button data-color="#1B3022" class="w-10 h-10 rounded-full bg-[#1B3022] border-2 border-white hover:ring-2 hover:ring-gray-300 transition-all"></button>
+                                <button data-color="#2D3E50" class="w-10 h-10 rounded-full bg-[#2D3E50] border-2 border-white hover:ring-2 hover:ring-gray-300 transition-all"></button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex items-baseline space-x-3">
+                                <span class="text-4xl font-black text-gray-900">₩459,000</span>
+                                <span class="text-lg text-gray-300 line-through">₩599,000</span>
+                            </div>
+                            <button class="w-full bg-gray-900 text-white py-5 rounded-xl font-bold hover:bg-blue-600 transition-all shadow-xl hover:shadow-blue-200 active:scale-95">장바구니 담기</button>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-            <div className={`md:hidden transition-all duration-300 ease-in-out overflow-hidden ${isMenuOpen ? "max-h-48" : "max-h-0"}`}>
-              <div className="py-2 space-y-1">
-                <a href="#home" className="block text-gray-900 hover:text-blue-600 px-3 py-2 text-base font-medium">홈</a>
-                <a href="#featured" className="block text-gray-500 hover:text-blue-600 px-3 py-2 text-base font-medium">MD추천</a>
-                <a href="#popular" className="block text-gray-500 hover:text-blue-600 px-3 py-2 text-base font-medium">인기상품</a>
-                <a href="#new" className="block text-gray-500 hover:text-blue-600 px-3 py-2 text-base font-medium">신상품</a>
-                <a href="#sale" className="block text-gray-500 hover:text-blue-600 px-3 py-2 text-base font-medium">세일</a>
-              </div>
+        </section>
+
+        <!-- 3. 인기상품 목록 (Slider) -->
+        <section id="popular" class="py-24 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-12 space-y-4">
+                    <div>
+                        <h2 class="text-4xl font-black tracking-tighter uppercase">BEST COLLECTIONS</h2>
+                        <p class="text-gray-400 mt-2 font-medium">이번 주 가장 사랑받은 아이템 6가지</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button id="prev-btn" class="w-12 h-12 rounded-full bg-white border border-gray-100 flex items-center justify-center hover:bg-gray-900 hover:text-white transition-all shadow-sm">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        </button>
+                        <button id="next-btn" class="w-12 h-12 rounded-full bg-white border border-gray-100 flex items-center justify-center hover:bg-gray-900 hover:text-white transition-all shadow-sm">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Slider Container -->
+                <div id="product-slider" class="flex overflow-x-auto no-scrollbar snap-x snap-mandatory gap-8 pb-10">
+                    <!-- Product Cards will be injected by JS -->
+                </div>
+
+                <div class="mt-12 text-center">
+                    <button class="px-12 py-4 border-2 border-gray-900 rounded-full font-bold hover:bg-gray-900 hover:text-white transition-all active:scale-95">
+                        더 많은 인기상품 보기
+                    </button>
+                </div>
             </div>
-          </div>
-        </nav>
-      );
-    };
+        </section>
+    </main>
 
-    // 3D Bag Showcase Component
-    const Bag3DShowcase = () => {
-      const [bagColor, setBagColor] = useState('#8b4513');
-      const canvasRef = useRef(null);
-      const bagMeshRef = useRef(null);
-      
-      const colors = [
-        { name: '블랙', value: '#000000' },
-        { name: '브라운', value: '#8b4513' },
-        { name: '베이지', value: '#f5deb3' },
-        { name: '네이비', value: '#000080' },
-        { name: '와인', value: '#722f37' },
-      ];
-
-      useEffect(() => {
-        if (!canvasRef.current) return;
-
-        // Scene setup
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(50, canvasRef.current.clientWidth / canvasRef.current.clientHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ 
-          canvas: canvasRef.current, 
-          alpha: true, 
-          antialias: true 
-        });
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(canvasRef.current.clientWidth, canvasRef.current.clientHeight);
-
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-        scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(5, 5, 5);
-        scene.add(directionalLight);
-
-        // Bag Group
-        const bagGroup = new THREE.Group();
-        
-        // Body
-        const bodyGeo = new THREE.BoxGeometry(1.5, 2, 0.8);
-        const bodyMat = new THREE.MeshStandardMaterial({ 
-          color: bagColor, 
-          roughness: 0.4,
-          metalness: 0.1
-        });
-        const body = new THREE.Mesh(bodyGeo, bodyMat);
-        bagGroup.add(body);
-        bagMeshRef.current = body;
-
-        // Handle
-        const handleGeo = new THREE.TorusGeometry(0.5, 0.08, 16, 100, Math.PI);
-        const handleMat = new THREE.MeshStandardMaterial({ color: '#3d2b1f' });
-        const handle = new THREE.Mesh(handleGeo, handleMat);
-        handle.position.y = 1;
-        bagGroup.add(handle);
-
-        scene.add(bagGroup);
-        camera.position.z = 5;
-
-        // Animation
-        let animationId;
-        const animate = () => {
-          animationId = requestAnimationFrame(animate);
-          bagGroup.rotation.y += 0.01;
-          renderer.render(scene, camera);
-        };
-        animate();
-
-        // Resize handler
-        const handleResize = () => {
-          if (!canvasRef.current) return;
-          camera.aspect = canvasRef.current.clientWidth / canvasRef.current.clientHeight;
-          camera.updateProjectionMatrix();
-          renderer.setSize(canvasRef.current.clientWidth, canvasRef.current.clientHeight);
-        };
-        window.addEventListener('resize', handleResize);
-
-        // Cleanup
-        return () => {
-          cancelAnimationFrame(animationId);
-          window.removeEventListener('resize', handleResize);
-          renderer.dispose();
-        };
-      }, []);
-
-      useEffect(() => {
-        if (bagMeshRef.current) {
-          bagMeshRef.current.material.color.set(bagColor);
-        }
-      }, [bagColor]);
-
-      return (
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">MD 추천 상품</h2>
-            <p className="text-gray-600">프리미엄 가죽 핸드백</p>
-          </div>
-          
-          <div className="relative h-96 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl mb-8 overflow-hidden flex items-center justify-center">
-            <canvas ref={canvasRef} className="w-full h-full" />
-            <div className="absolute bottom-4 right-4 text-xs text-gray-400">
-              Real-time 3D Rendering (Three.js)
+    <footer class="bg-gray-900 text-white py-20">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-gray-800 pb-12">
+            <div class="col-span-1 md:col-span-1">
+                <div class="text-2xl font-black font-montserrat tracking-tighter mb-6">VIBE</div>
+                <p class="text-gray-500 text-sm leading-relaxed font-medium">프리미엄 가방의 본질을 연구하고 현대적인 감각으로 재해석하는 브랜드 VIBE입니다.</p>
             </div>
-          </div>
-
-          <div className="flex flex-col items-center space-y-4">
-            <h3 className="text-lg font-medium text-gray-900">색상 선택</h3>
-            <div className="flex space-x-3">
-              {colors.map((color) => (
-                <button
-                  key={color.value}
-                  onClick={() => setBagColor(color.value)}
-                  className={`w-10 h-10 rounded-full border-2 transition-all ${
-                    bagColor === color.value 
-                      ? 'border-gray-900 scale-110 shadow-lg' 
-                      : 'border-gray-300 hover:border-gray-500'
-                  }`}
-                  style={{ backgroundColor: color.value }}
-                  title={color.name}
-                />
-              ))}
+            <div>
+                <h5 class="font-bold text-xs tracking-widest uppercase mb-6 text-gray-400">SHOP</h5>
+                <ul class="space-y-4 text-sm text-gray-500 font-bold">
+                    <li><a href="#" class="hover:text-white transition-colors">NEW ARRIVALS</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">BESTSELLERS</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">MENS</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">WOMENS</a></li>
+                </ul>
             </div>
-          </div>
-
-          <div className="mt-8 text-center">
-            <div className="flex justify-center items-center space-x-4 mb-4">
-              <span className="text-2xl font-bold text-gray-900">₩299,000</span>
-              <span className="text-lg text-gray-500 line-through">₩399,000</span>
-              <span className="bg-red-500 text-white px-2 py-1 rounded text-sm font-medium">25%</span>
+            <div>
+                <h5 class="font-bold text-xs tracking-widest uppercase mb-6 text-gray-400">SUPPORT</h5>
+                <ul class="space-y-4 text-sm text-gray-500 font-bold">
+                    <li><a href="#" class="hover:text-white transition-colors">CONTACT US</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">SHIPPING</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">RETURNS</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">FAQ</a></li>
+                </ul>
             </div>
-            <p className="text-gray-600 mb-6">이탈리아산 프리미엄 가죽으로 제작된 클래식한 디자인의 핸드백입니다.</p>
-            <button className="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors">
-              장바구니에 담기
-            </button>
-          </div>
+            <div>
+                <h5 class="font-bold text-xs tracking-widest uppercase mb-6 text-gray-400">NEWSLETTER</h5>
+                <p class="text-xs text-gray-500 mb-6 font-medium">VIBE의 새로운 소식과 혜택을 가장 먼저 받아보세요.</p>
+                <div class="relative">
+                    <input type="email" placeholder="Email Address" class="w-full bg-gray-800 border-none rounded-lg py-4 px-6 text-sm focus:ring-1 focus:ring-blue-600 transition-all">
+                    <button class="absolute right-2 top-2 bottom-2 bg-blue-600 text-white px-6 rounded-md font-bold text-xs hover:bg-blue-500 transition-all">JOIN</button>
+                </div>
+            </div>
         </div>
-      );
-    };
-
-    // Product Card Component
-    const ProductCard = ({ product }) => {
-      const [isHovered, setIsHovered] = useState(false);
-
-      return (
-        <div
-          className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group relative"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <div className="relative aspect-square overflow-hidden bg-gray-50">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            />
-            {product.discount && (
-              <span className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">
-                {product.discount}%
-              </span>
-            )}
-          </div>
-          <div className="p-4">
-            <h3 className="font-medium text-gray-900 mb-2 line-clamp-2">{product.name}</h3>
-            <div className="flex items-center mb-2">
-              <div className="flex text-yellow-400">
-                {[...Array(5)].map((_, i) => (
-                  <svg key={i} className={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-300 fill-current"}`} viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
-              </div>
-              <span className="text-sm text-gray-500 ml-1">({product.reviews})</span>
+        <div class="max-w-7xl mx-auto px-6 pt-12 flex flex-col md:flex-row justify-between items-center text-gray-600 text-[10px] font-bold tracking-widest uppercase">
+            <div>&copy; 2024 VIBE PREMIUM SHOP. ALL RIGHTS RESERVED.</div>
+            <div class="flex space-x-8 mt-4 md:mt-0">
+                <a href="#">PRIVACY POLICY</a>
+                <a href="#">TERMS OF SERVICE</a>
             </div>
-            <div className="font-bold text-gray-900 text-lg">₩{product.price.toLocaleString()}</div>
-          </div>
-          {isHovered && (
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center transition-opacity">
-              <button className="bg-white text-gray-900 px-6 py-2 rounded-lg font-bold hover:bg-gray-100 transition-colors">
-                퀵뷰
-              </button>
-            </div>
-          )}
         </div>
-      );
-    };
-
-    // Product Slider Component
-    const ProductSlider = () => {
-      const [currentIndex, setCurrentIndex] = useState(0);
-      const products = [
-        { id: 1, name: '미니멀 토트백', price: 189000, rating: 4.5, reviews: 128, discount: 27, image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop' },
-        { id: 2, name: '클래식 숄더백', price: 229000, rating: 4.8, reviews: 89, image: 'https://images.unsplash.com/photo-1584917006201-6b832e55c1c6?w=400&h=400&fit=crop' },
-        { id: 3, name: '체인 크로스백', price: 159000, rating: 4.3, reviews: 67, discount: 20, image: 'https://images.unsplash.com/photo-1590874103328-eac7a68e0a8a?w=400&h=400&fit=crop' },
-        { id: 4, name: '버킷백 라지', price: 269000, rating: 4.6, reviews: 156, image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=400&fit=crop' },
-        { id: 5, name: '레더 백팩', price: 329000, rating: 4.7, reviews: 203, discount: 15, image: 'https://images.unsplash.com/photo-1547949003-9792a18a2601?w=400&h=400&fit=crop' },
-        { id: 6, name: '미니 클러치', price: 99000, rating: 4.4, reviews: 45, discount: 33, image: 'https://images.unsplash.com/photo-1566150905458-1bf1fd113f0d?w=400&h=400&fit=crop' },
-        { id: 7, name: '캔버스 쇼퍼백', price: 79000, rating: 4.2, reviews: 78, image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=400&h=400&fit=crop' },
-        { id: 8, name: '럭셔리 파우치', price: 129000, rating: 4.9, reviews: 34, image: 'https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=400&h=400&fit=crop' }
-      ];
-
-      const itemsPerPage = 6;
-      const totalPages = Math.ceil(products.length / itemsPerPage);
-      const displayedProducts = products.slice(currentIndex * itemsPerPage, (currentIndex + 1) * itemsPerPage);
-
-      return (
-        <div className="bg-gray-50 py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center mb-10">
-              <h2 className="text-3xl font-bold text-gray-900">인기상품</h2>
-              <div className="flex space-x-2">
-                <button 
-                  onClick={() => setCurrentIndex(0)}
-                  className={`p-2 rounded-full border ${currentIndex === 0 ? 'bg-gray-200 cursor-not-allowed' : 'bg-white hover:bg-gray-100'}`}
-                  disabled={currentIndex === 0}
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                </button>
-                <button 
-                  onClick={() => setCurrentIndex(1)}
-                  className={`p-2 rounded-full border ${currentIndex === 1 ? 'bg-gray-200 cursor-not-allowed' : 'bg-white hover:bg-gray-100'}`}
-                  disabled={currentIndex === 1}
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                </button>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-              {displayedProducts.map(product => <ProductCard key={product.id} product={product} />)}
-            </div>
-            <div className="text-center">
-              <button className="bg-white text-gray-900 border border-gray-900 px-10 py-3 rounded-lg font-bold hover:bg-gray-900 hover:text-white transition-all">
-                더보기
-              </button>
-            </div>
-          </div>
-        </div>
-      );
-    };
-
-    // Main App Component
-    const App = () => {
-      return (
-        <div className="min-h-screen">
-          <Navigation />
-          <section id="featured" className="py-16">
-            <div className="max-w-4xl mx-auto px-4">
-              <Bag3DShowcase />
-            </div>
-          </section>
-          <section id="popular">
-            <ProductSlider />
-          </section>
-          <footer className="bg-gray-900 text-white py-12">
-            <div className="max-w-7xl mx-auto px-4 text-center">
-              <div className="text-2xl font-bold mb-4 text-white">VIBE</div>
-              <p className="text-gray-400 mb-8">프리미엄 가방 쇼핑몰</p>
-              <div className="flex justify-center space-x-8 text-sm text-gray-500">
-                <a href="#" className="hover:text-white transition-colors">이용약관</a>
-                <a href="#" className="hover:text-white transition-colors">개인정보처리방침</a>
-                <a href="#" className="hover:text-white transition-colors">고객센터</a>
-              </div>
-            </div>
-          </footer>
-        </div>
-      );
-    };
-
-    ReactDOM.render(<App />, document.getElementById('root'));
-  </script>
+    </footer>
 </body>
 </html>

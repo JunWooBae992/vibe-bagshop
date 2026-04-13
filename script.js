@@ -47,11 +47,11 @@ function initThree() {
         console.warn('OrbitControls is not loaded.');
     }
 
-    // Load 3D Model (서류가방 (1).glb)
+    // Load 3D Model (briefcase.glb)
     const loader = (typeof THREE.GLTFLoader !== 'undefined') ? new THREE.GLTFLoader() : null;
     
     if (loader) {
-        loader.load('assets/서류가방 (1).glb', function(gltf) {
+        loader.load('assets/briefcase.glb', function(gltf) {
             bag = gltf.scene;
             // Center model
             const box = new THREE.Box3().setFromObject(bag);

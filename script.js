@@ -1,6 +1,32 @@
 // --- 1. Three.js 3D Showcase ---
 let scene, camera, renderer, bag, controls;
+let currentModelIndex = 0;
 const container = document.getElementById('three-canvas-container');
+
+const mdProducts = [
+    {
+        name: "SIGNATURE BRIEFCASE",
+        desc: "프리미엄 천연 가죽과 정교한 수작업으로 완성된 VIBE의 시그니처 아이템입니다. 마우스로 드래그하여 가방의 디테일을 확인해보세요.",
+        price: "₩459,000",
+        originalPrice: "₩599,000",
+        modelPath: "assets/briefcase.glb",
+        details: [
+            { title: "Premium Leather", desc: "이탈리아산 최상급 소가죽만을 선별하여 시간이 흐를수록 깊어지는 풍미를 느낄 수 있습니다." },
+            { title: "Functional Design", desc: "16인치 맥북 수납이 가능하며, 다양한 스마트 기기 포켓이 구성되어 있습니다." }
+        ]
+    },
+    {
+        name: "URBAN CROSSBAG",
+        desc: "활동적인 도시 생활을 위해 디자인된 세련된 크로스백입니다. 가볍지만 견고한 소재로 매일 함께하기 좋습니다.",
+        price: "₩189,000",
+        originalPrice: "₩249,000",
+        modelPath: "assets/crossbag.glb",
+        details: [
+            { title: "Waterproof Fabric", desc: "특수 코팅된 고밀도 나일론 소재로 생활 방수는 물론 오염에 강해 관리가 용이합니다." },
+            { title: "Quick Access", desc: "자석 타입의 오프닝 시스템으로 소지품을 빠르게 꺼내고 안전하게 보관할 수 있습니다." }
+        ]
+    }
+];
 
 function initThree() {
     if (!container) return;
@@ -43,17 +69,20 @@ function initThree() {
         controls.maxDistance = 8;
         controls.autoRotate = true;
         controls.autoRotateSpeed = 2.0;
-    } else {
-        console.warn('OrbitControls is not loaded.');
     }
 
-    // Load 3D Model (briefcase.glb)
+    loadModel(mdProducts[currentModelIndex].modelPath);
+    animate();
+}
+
+function loadModel(path) {
     const loader = (typeof THREE.GLTFLoader !== 'undefined') ? new THREE.GLTFLoader() : null;
     
+    if (bag) scene.remove(bag);
+
     if (loader) {
-        loader.load('assets/briefcase.glb', function(gltf) {
+        loader.load(path, function(gltf) {
             bag = gltf.scene;
-            // Center model
             const box = new THREE.Box3().setFromObject(bag);
             const center = box.getCenter(new THREE.Vector3());
             bag.position.sub(center);
@@ -63,12 +92,59 @@ function initThree() {
             createFallbackBag();
         });
     } else {
-        console.warn('GLTFLoader is not loaded. Using fallback model.');
         createFallbackBag();
     }
-
-    animate();
 }
+
+function updateMDProductUI(index) {
+    const product = mdProducts[index];
+    const nameEl = document.getElementById('md-product-name');
+    const descEl = document.getElementById('md-product-desc');
+    const priceEl = document.getElementById('md-product-price');
+    const originalPriceEl = document.getElementById('md-product-original-price');
+    
+    // Details
+    const detailsLeft = document.getElementById('md-details-left');
+    const titles = detailsLeft.querySelectorAll('h4');
+    const descs = detailsLeft.querySelectorAll('p');
+
+    // UI Updates with animation
+    container.classList.add('fade-out');
+    
+    setTimeout(() => {
+        nameEl.textContent = product.name;
+        descEl.textContent = product.desc;
+        priceEl.textContent = product.price;
+        originalPriceEl.textContent = product.originalPrice;
+        
+        product.details.forEach((detail, i) => {
+            if (titles[i]) titles[i].textContent = detail.title;
+            if (descs[i]) descs[i].textContent = detail.desc;
+        });
+
+        loadModel(product.modelPath);
+        container.classList.remove('fade-out');
+    }, 500);
+}
+
+const initMDCarousel = () => {
+    const prevBtn = document.getElementById('md-prev');
+    const nextBtn = document.getElementById('md-next');
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            currentModelIndex = (currentModelIndex - 1 + mdProducts.length) % mdProducts.length;
+            updateMDProductUI(currentModelIndex);
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            currentModelIndex = (currentModelIndex + 1) % mdProducts.length;
+            updateMDProductUI(currentModelIndex);
+        });
+    }
+};
 
 function createFallbackBag() {
     // 가방 몸체
@@ -185,4 +261,5 @@ document.addEventListener('DOMContentLoaded', () => {
     renderProducts();
     initColorPicker();
     initSliderControls();
+    initMDCarousel();
 });

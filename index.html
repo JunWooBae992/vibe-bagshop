@@ -44,29 +44,37 @@
             <div class="max-w-7xl mx-auto px-6">
                 <div class="text-center mb-12">
                     <h3 class="text-blue-600 font-bold tracking-widest text-sm mb-2 uppercase">MD'S CHOICE</h3>
-                    <h2 class="text-4xl md:text-5xl font-black tracking-tight mb-4">SIGNATURE BRIEFCASE</h2>
-                    <p class="text-gray-500 max-w-2xl mx-auto">프리미엄 천연 가죽과 정교한 수작업으로 완성된 VIBE의 시그니처 아이템입니다. 마우스로 드래그하여 가방의 디테일을 확인해보세요.</p>
+                    <h2 class="text-4xl md:text-5xl font-black tracking-tight mb-4" id="md-product-name">SIGNATURE BRIEFCASE</h2>
+                    <p class="text-gray-500 max-w-2xl mx-auto" id="md-product-desc">프리미엄 천연 가죽과 정교한 수작업으로 완성된 VIBE의 시그니처 아이템입니다. 마우스로 드래그하여 가방의 디테일을 확인해보세요.</p>
                 </div>
 
                 <div class="grid lg:grid-cols-3 gap-12 items-center">
                     <!-- Left: Details -->
-                    <div class="space-y-8 order-2 lg:order-1">
+                    <div class="space-y-8 order-2 lg:order-1" id="md-details-left">
                         <div>
-                            <h4 class="font-bold text-lg mb-2 border-l-4 border-blue-600 pl-4">Premium Leather</h4>
-                            <p class="text-sm text-gray-500 leading-relaxed">이탈리아산 최상급 소가죽만을 선별하여 시간이 흐를수록 깊어지는 풍미를 느낄 수 있습니다.</p>
+                            <h4 class="font-bold text-lg mb-2 border-l-4 border-blue-600 pl-4 detail-title-1">Premium Leather</h4>
+                            <p class="text-sm text-gray-500 leading-relaxed detail-desc-1">이탈리아산 최상급 소가죽만을 선별하여 시간이 흐를수록 깊어지는 풍미를 느낄 수 있습니다.</p>
                         </div>
                         <div>
-                            <h4 class="font-bold text-lg mb-2 border-l-4 border-blue-600 pl-4">Functional Design</h4>
-                            <p class="text-sm text-gray-500 leading-relaxed">16인치 맥북 수납이 가능하며, 다양한 스마트 기기 포켓이 구성되어 있습니다.</p>
+                            <h4 class="font-bold text-lg mb-2 border-l-4 border-blue-600 pl-4 detail-title-2">Functional Design</h4>
+                            <p class="text-sm text-gray-500 leading-relaxed detail-desc-2">16인치 맥북 수납이 가능하며, 다양한 스마트 기기 포켓이 구성되어 있습니다.</p>
                         </div>
                     </div>
 
                     <!-- Center: 3D Canvas -->
                     <div class="relative group order-1 lg:order-2 lg:col-span-1">
                         <div id="three-canvas-container" class="bg-gradient-to-b from-gray-50 to-white rounded-3xl overflow-hidden shadow-2xl transition-all duration-700 group-hover:shadow-blue-100"></div>
-                        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-md px-6 py-2 rounded-full shadow-sm text-[10px] font-bold tracking-widest text-gray-400 uppercase">
-                            DRAG TO ROTATE
+                        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-md px-6 py-2 rounded-full shadow-sm text-[10px] font-bold tracking-widest text-gray-400 uppercase flex items-center space-x-2">
+                            <span>DRAG TO ROTATE</span>
                         </div>
+                        
+                        <!-- Carousel Controls -->
+                        <button id="md-prev" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/50 backdrop-blur-md border border-white flex items-center justify-center hover:bg-white transition-all shadow-sm z-10">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        </button>
+                        <button id="md-next" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/50 backdrop-blur-md border border-white flex items-center justify-center hover:bg-white transition-all shadow-sm z-10">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </button>
                     </div>
 
                     <!-- Right: Color & Action -->
@@ -83,8 +91,8 @@
 
                         <div class="space-y-4">
                             <div class="flex items-baseline space-x-3">
-                                <span class="text-4xl font-black text-gray-900">₩459,000</span>
-                                <span class="text-lg text-gray-300 line-through">₩599,000</span>
+                                <span class="text-4xl font-black text-gray-900" id="md-product-price">₩459,000</span>
+                                <span class="text-lg text-gray-300 line-through" id="md-product-original-price">₩599,000</span>
                             </div>
                             <button class="w-full bg-gray-900 text-white py-5 rounded-xl font-bold hover:bg-blue-600 transition-all shadow-xl hover:shadow-blue-200 active:scale-95">장바구니 담기</button>
                         </div>

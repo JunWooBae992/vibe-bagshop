@@ -22,6 +22,10 @@ body {
     width: 100%;
     height: 500px;
     cursor: grab;
+    transition: opacity 0.5s ease;
+}
+.fade-out {
+    opacity: 0;
 }
 #three-canvas-container:active {
     cursor: grabbing;
